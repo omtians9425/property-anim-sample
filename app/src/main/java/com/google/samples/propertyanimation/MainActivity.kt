@@ -23,7 +23,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
-import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.FrameLayout
@@ -82,8 +81,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun rotater() {
+
         val animator = ObjectAnimator.ofFloat(star, View.ROTATION, -360f, 0f) //factory method
         animator.duration = 1000
+
         // disable animation-start button to prevent "jank".
         animator.disableViewDuringAnimation(rotateButton)
         animator.start()
@@ -102,8 +103,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun translater() {
+
         // Start position is updated when call animator.start() if we pass only one position parameter
         // this one param is used as end position parameter.
+
         val animator = ObjectAnimator.ofFloat(star, View.TRANSLATION_X, 200f)
         animator.repeatCount = 1
         animator.repeatMode = ObjectAnimator.REVERSE
@@ -113,6 +116,7 @@ class MainActivity : AppCompatActivity() {
 
     // To animate multiple params, use PropertyValuesHolder and pass them to ObjectAnimator.
     private fun scaler() {
+
         val scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 4f) // x4 size
         val scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 4f)
 
@@ -158,6 +162,7 @@ class MainActivity : AppCompatActivity() {
         )
         container.addView(newStar)
 
+        // update params
         newStar.scaleX = Math.random().toFloat() + 1.5f + .1f
         newStar.scaleY = newStar.scaleX
         starW *= newStar.scaleX
@@ -169,16 +174,18 @@ class MainActivity : AppCompatActivity() {
         val mover = ObjectAnimator.ofFloat(newStar, View.TRANSLATION_Y, -starH, containerH + starH)
         mover.interpolator = AccelerateInterpolator(1f)
 
-        val rotator = ObjectAnimator.ofFloat(newStar, View.ROTATION, (Math.random() * 1080).toFloat())
+        val rotator =
+            ObjectAnimator.ofFloat(newStar, View.ROTATION, (Math.random() * 1080).toFloat())
         rotator.interpolator = LinearInterpolator()
 
         // AnimatorSet enables to run multiple animations in parallel and sequentially.
         val set = AnimatorSet()
         set.playTogether(mover, rotator) // also you can use "playSequentially".
         set.duration = (Math.random() * 1500 + 500).toLong()
+
         set.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator?) {
-                container.removeView(newStar)
+                container.removeView(newStar) // remove after falling down
             }
         })
         set.start()
