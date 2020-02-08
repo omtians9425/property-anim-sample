@@ -20,6 +20,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -27,6 +28,9 @@ import android.widget.Button
 import android.widget.ImageView
 
 
+/**
+ * ObjectAnimator is way to go for individual property animation.
+ */
 class MainActivity : AppCompatActivity() {
 
     lateinit var star: ImageView
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun rotater() {
-        val animator = ObjectAnimator.ofFloat(star, View.ROTATION, -360f, 0f)
+        val animator = ObjectAnimator.ofFloat(star, View.ROTATION, -360f, 0f) //factory method
         animator.duration = 1000
         // disable animation-start button to prevent "jank".
         animator.disableViewDuringAnimation(rotateButton)
@@ -125,6 +129,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun colorizer() {
+        // if sdk < 21 we cannot use ofArgb. Use ArgbEvaluator instead.
+        // if property is exposed as getter method we specify property name by string. method searches prop by reflection.
+        val animator = ObjectAnimator.ofArgb(star.parent, "backgroundColor", Color.BLACK, Color.RED)
+        animator.duration = 500
+        animator.repeatCount = 1
+        animator.repeatMode = ObjectAnimator.REVERSE
+        animator.disableViewDuringAnimation(colorizeButton)
+        animator.start()
     }
 
     private fun shower() {
